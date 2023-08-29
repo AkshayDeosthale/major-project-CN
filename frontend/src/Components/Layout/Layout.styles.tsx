@@ -22,7 +22,9 @@ export const AppbarDataContainer = styled(Box)<BoxProps>(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
-  [theme.breakpoints.down("md")]: { width: "100%" },
+  [theme.breakpoints.down("md")]: {
+    width: "90%",
+  },
   [theme.breakpoints.up("md")]: {
     width: "60%",
   },
@@ -42,12 +44,9 @@ export const LayoutHeading = styled(Typography)<TypographyProps>(
 export const LayoutButtonsContainer = styled(Box)<BoxProps>(({ theme }) => ({
   alignItems: "center",
   gap: "10px",
-  [theme.breakpoints.down("md")]: {
-    display: "none",
-  },
-  [theme.breakpoints.up("md")]: {
-    display: "flex",
-  },
+
+  [theme.breakpoints.down("md")]: { display: "none" },
+  [theme.breakpoints.up("md")]: { display: "flex" },
 }));
 
 export const LayoutButtons = styled(IconButton)<IconButtonProps>(

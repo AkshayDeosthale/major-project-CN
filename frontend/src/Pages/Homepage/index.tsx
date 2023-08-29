@@ -75,7 +75,14 @@ const HomePage = () => {
   return (
     <HomepageContainer>
       <HomePageStructure spacing={2} container>
-        <Grid item xs={0} md={5}>
+        <Grid
+          sx={{
+            display: { xs: "none", md: "inherit" },
+          }}
+          item
+          xs={0}
+          md={5}
+        >
           <LeftsideHomepage />
         </Grid>
         <Grid item xs={12} md={7}>

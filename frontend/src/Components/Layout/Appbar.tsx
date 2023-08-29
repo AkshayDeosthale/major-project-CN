@@ -27,7 +27,7 @@ const menuitems = [
   {
     icons: <LocalActivityIcon />,
     tooltiptext: "You Activity and Profile",
-    route: "/following",
+    route: "/activities",
   },
 ];
 

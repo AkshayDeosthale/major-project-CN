@@ -7,9 +7,8 @@ export const HomepageContainer = styled(Box)<BoxProps>(({ theme }) => ({
   justifyContent: "center",
   alignItems: "flex-start",
 
-  padding: "20px",
-  [theme.breakpoints.down("md")]: {},
-  [theme.breakpoints.up("md")]: {},
+  [theme.breakpoints.down("md")]: { padding: "10px" },
+  [theme.breakpoints.up("md")]: { padding: "20px" },
 }));
 
 export const HomePageStructure = styled(Grid)<GridProps>(({ theme }) => ({
