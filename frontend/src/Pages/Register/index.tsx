@@ -1,15 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Box, Button, TextField } from "@mui/material";
+import { CardContainer, Heading, LoginContainer } from "../Login/Login.Styles";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { CardContainer, Heading, LoginContainer } from "./Login.Styles";
+import axios from "axios";
+import { USER_URL } from "../../GLOBAL_CONSTANTS";
 
 type Inputs = {
+  username: string;
   email: string;
   password: string;
 };
-const Login = () => {
+
+const RegisterPage = () => {
   const navigate = useNavigate();
   const {
     register,
@@ -17,9 +21,13 @@ const Login = () => {
     watch,
     formState: { errors },
   } = useForm();
-  const onSubmit: SubmitHandler<any> = (data: Inputs) => {
-    console.log(data);
-    navigate("/");
+  const onSubmit: SubmitHandler<any> = async (data: Inputs) => {
+    try {
+      const res = await axios.post(`${USER_URL}/register`, data);
+      navigate("/login");
+    } catch (error) {
+      console.error(error);
+    }
   };
   return (
     <LoginContainer>
@@ -34,6 +42,16 @@ const Login = () => {
               gap: "15px",
             }}
           >
+            <TextField
+              type="text"
+              fullWidth
+              required
+              size="small"
+              color="secondary"
+              label="Fullname"
+              variant="outlined"
+              {...register("username")}
+            />
             <TextField
               type="email"
               required
@@ -55,39 +73,19 @@ const Login = () => {
               {...register("password")}
             />
           </Box>
-          <Box
-            sx={{
-              display: "flex",
-              width: "100%",
-              justifyContent: "flex-end",
-              gap: "15px",
-              mt: "15px",
-            }}
+          <Button
+            size="small"
+            color="secondary"
+            sx={{ textTransform: "none", mt: "15px" }}
+            variant="contained"
+            type="submit"
           >
-            <Button
-              size="small"
-              color="success"
-              sx={{ textTransform: "none" }}
-              variant="contained"
-              type="submit"
-            >
-              Login
-            </Button>
-            <Button
-              size="small"
-              color="secondary"
-              sx={{ textTransform: "none" }}
-              variant="contained"
-              type="button"
-              onClick={() => navigate("/register")}
-            >
-              Register
-            </Button>
-          </Box>
+            Register
+          </Button>
         </form>
       </CardContainer>
     </LoginContainer>
   );
 };
 
-export default Login;
+export default RegisterPage;

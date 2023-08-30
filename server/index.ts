@@ -1,12 +1,20 @@
 import dotenv from "dotenv";
 import express, { Express } from "express";
 import mongoose from "mongoose";
+import cors from "cors";
 
 dotenv.config();
 
 const app: Express = express();
 
-const port = 6000;
+const port = 3000;
+
+//middlewares
+app.use(cors({ origin: "*" }));
+
+app.use(express.json());
+
+app.use("/users", require("./Routes/users"));
 
 app.use("/posts", require("./Routes/posts"));
 

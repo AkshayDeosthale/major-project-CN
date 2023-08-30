@@ -21,9 +21,10 @@ export const LoginContainer = styled(Box)<BoxProps>(({ theme }) => ({
 
 export const CardContainer = styled(Card)<CardProps>(({ theme }) => ({
   display: "flex",
-  justifyContent: "center",
+  justifyContent: "space-around",
   alignItems: "center",
-  padding: "10px",
+  flexDirection: "column",
+  padding: "20px",
   [theme.breakpoints.down("md")]: {
     width: "100%",
     height: "100%",
