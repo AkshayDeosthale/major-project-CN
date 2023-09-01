@@ -1,43 +1,124 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Box, Button, TextField } from "@mui/material";
-import { CardContainer, Heading, LoginContainer } from "../Login/Login.Styles";
-import { SubmitHandler, useForm } from "react-hook-form";
+import {
+  Autocomplete,
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+} from "@mui/material";
+import axios from "axios";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import axios, { AxiosError } from "axios";
-import { USER_URL } from "../../GLOBAL_CONSTANTS";
 import { toast } from "react-toastify";
 
-type Inputs = {
-  username: string;
-  email: string;
-  password: string;
-};
+import { USER_URL } from "../../GLOBAL_CONSTANTS";
+import { CardContainer, Heading, LoginContainer } from "../Login/Login.Styles";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+
+  //dialogue state
+  const [open, setOpen] = useState<boolean>(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleModalClose = (event: any, reason: any) => {
+    if (reason && reason == "backdropClick") return;
+    handleClose();
+  };
+
+  //form and api
   const {
     register,
     handleSubmit,
     watch,
     reset,
+    getValues,
     formState: { errors },
   } = useForm();
-  const onSubmit: SubmitHandler<any> = async (data: Inputs) => {
+  const onSubmit = async () => {
+    const newinterests = value.map(
+      (val: { title: string; year: number }) => val.title
+    );
+
+    const data = {
+      username: getValues("username"),
+      email: getValues("email"),
+      password: getValues("password"),
+      interests: newinterests,
+    };
     try {
       const res = await axios.post(`${USER_URL}/register`, data);
-
       toast.success(res.data.message[0]);
       navigate("/login");
     } catch (error: any) {
       toast.error(error.response.data.message[0]);
     }
   };
+
+  //interests
+  const [value, setValue] = useState<any>([]);
+
   return (
     <LoginContainer>
+      <Dialog
+        open={open}
+        onClose={handleModalClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Select your Interests!"}
+        </DialogTitle>
+        <DialogContent>
+          <Autocomplete
+            size="small"
+            multiple
+            id="tags-standard"
+            options={INTERESTS}
+            getOptionLabel={(option) => option.title}
+            value={value}
+            onChange={(event: any, newValue: any) => {
+              setValue(newValue);
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                fullWidth
+                sx={{ minWidth: { xs: "300px", md: "500px" } }}
+                size="small"
+                variant="outlined"
+                placeholder="Favorites"
+              />
+            )}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            size="small"
+            color="success"
+            sx={{ textTransform: "none" }}
+            variant="contained"
+            type="button"
+            onClick={onSubmit}
+          >
+            Register
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       <CardContainer variant="elevation" elevation={3}>
         <Heading>Quora</Heading>
-        <form style={{ width: "100%" }} onSubmit={handleSubmit(onSubmit)}>
+        <form style={{ width: "100%" }}>
           <Box
             sx={{
               width: "100%",
@@ -91,7 +172,8 @@ const RegisterPage = () => {
               color="success"
               sx={{ textTransform: "none" }}
               variant="contained"
-              type="submit"
+              type="button"
+              onClick={handleClickOpen}
             >
               Register
             </Button>
@@ -114,5 +196,14 @@ const RegisterPage = () => {
     </LoginContainer>
   );
 };
+
+export const INTERESTS = [
+  { title: "The Shawshank Redemption", id: 1994 },
+  { title: "The Godfather", id: 1972 },
+  { title: "The Godfather: Part II", id: 1974 },
+  { title: "The Dark Knight", id: 2008 },
+  { title: "12 Angry Men", id: 1957 },
+  { title: "Schindler's List", id: 1993 },
+];
 
 export default RegisterPage;
