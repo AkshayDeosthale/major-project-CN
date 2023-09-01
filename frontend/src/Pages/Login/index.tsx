@@ -4,6 +4,9 @@ import { Box, Button, TextField } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { CardContainer, Heading, LoginContainer } from "./Login.Styles";
+import axios from "axios";
+import { USER_URL } from "../../GLOBAL_CONSTANTS";
+import { toast } from "react-toastify";
 
 type Inputs = {
   email: string;
@@ -17,9 +20,14 @@ const Login = () => {
     watch,
     formState: { errors },
   } = useForm();
-  const onSubmit: SubmitHandler<any> = (data: Inputs) => {
-    console.log(data);
-    navigate("/");
+  const onSubmit: SubmitHandler<any> = async (data: Inputs) => {
+    try {
+      const res = await axios.post(`${USER_URL}/login`, data);
+      toast.success(res.data.message[0]);
+      navigate("/");
+    } catch (error: any) {
+      toast.error(error.response.data.message[0]);
+    }
   };
   return (
     <LoginContainer>

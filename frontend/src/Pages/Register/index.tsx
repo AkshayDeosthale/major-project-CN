@@ -4,8 +4,9 @@ import { Box, Button, TextField } from "@mui/material";
 import { CardContainer, Heading, LoginContainer } from "../Login/Login.Styles";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { USER_URL } from "../../GLOBAL_CONSTANTS";
+import { toast } from "react-toastify";
 
 type Inputs = {
   username: string;
@@ -19,14 +20,17 @@ const RegisterPage = () => {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm();
   const onSubmit: SubmitHandler<any> = async (data: Inputs) => {
     try {
       const res = await axios.post(`${USER_URL}/register`, data);
+
+      toast.success(res.data.message[0]);
       navigate("/login");
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      toast.error(error.response.data.message[0]);
     }
   };
   return (
@@ -73,15 +77,38 @@ const RegisterPage = () => {
               {...register("password")}
             />
           </Box>
-          <Button
-            size="small"
-            color="secondary"
-            sx={{ textTransform: "none", mt: "15px" }}
-            variant="contained"
-            type="submit"
+          <Box
+            sx={{
+              display: "flex",
+              width: "100%",
+              justifyContent: "flex-end",
+              gap: "15px",
+              mt: "15px",
+            }}
           >
-            Register
-          </Button>
+            <Button
+              size="small"
+              color="success"
+              sx={{ textTransform: "none" }}
+              variant="contained"
+              type="submit"
+            >
+              Register
+            </Button>
+            <Button
+              size="small"
+              color="error"
+              sx={{ textTransform: "none" }}
+              variant="contained"
+              type="button"
+              onClick={() => {
+                reset();
+                navigate("/login");
+              }}
+            >
+              Back
+            </Button>
+          </Box>
         </form>
       </CardContainer>
     </LoginContainer>
