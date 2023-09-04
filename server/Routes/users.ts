@@ -9,13 +9,11 @@ export interface ResponseDTO {
   success: boolean;
 }
 
-const router = express.Router();
+export interface LoginResponseDTO extends ResponseDTO {
+  id?: string;
+}
 
-// middleware that is specific to this router
-router.use((req: Request, res: Response, next: NextFunction) => {
-  console.log("Time: ", Date.now());
-  next();
-});
+const router = express.Router();
 
 router.post("/register", async (req: Request, res: Response) => {
   const response: ResponseDTO = await RegisterUserService(req.body);
@@ -27,9 +25,10 @@ router.post("/register", async (req: Request, res: Response) => {
 });
 
 router.post("/login", async (req: Request, res: Response) => {
-  const response: ResponseDTO = await LoginService(req.body);
+  const response: LoginResponseDTO = await LoginService(req.body);
+
   if (response.success) {
-    res.status(200).send(response);
+    res.status(200).cookie("user", response.id).send(response);
   } else {
     res.status(500).send(response);
   }

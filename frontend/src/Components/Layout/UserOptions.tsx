@@ -17,7 +17,20 @@ export default function AccountMenu() {
   const navigate = useNavigate();
 
   const handleLogout = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
+    function deleteAllCookies() {
+      const cookies = document.cookie.split(";");
+
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i];
+        const eqPos = cookie.indexOf("=");
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      }
+    }
     e.preventDefault();
+    localStorage.clear();
+    sessionStorage.clear();
+    deleteAllCookies();
     navigate("/login");
   };
   const open = Boolean(anchorEl);
@@ -27,6 +40,7 @@ export default function AccountMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   return (
     <React.Fragment>
       <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>

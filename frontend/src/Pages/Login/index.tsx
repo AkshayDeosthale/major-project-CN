@@ -22,7 +22,11 @@ const Login = () => {
   } = useForm();
   const onSubmit: SubmitHandler<any> = async (data: Inputs) => {
     try {
-      const res = await axios.post(`${USER_URL}/login`, data);
+      const res = await axios.post(`${USER_URL}/login`, data, {
+        withCredentials: true,
+      });
+
+      document.cookie = `user=${res.data.id}`;
       toast.success(res.data.message[0]);
       navigate("/");
     } catch (error: any) {

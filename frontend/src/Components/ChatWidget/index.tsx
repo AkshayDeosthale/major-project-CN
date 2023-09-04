@@ -1,29 +1,77 @@
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import OnlineBadge from "@mui/icons-material/FiberManualRecord";
+import OfflineBadge from "@mui/icons-material/HighlightOff";
+import SendIcon from "@mui/icons-material/Send";
 import {
   Accordion,
+  AccordionActions,
   AccordionDetails,
   AccordionSummary,
+  Box,
+  IconButton,
+  TextField,
   Typography,
 } from "@mui/material";
-import { WidgetContainer } from "./ChatWidget.styles";
+import { useState } from "react";
+import {
+  Message,
+  MessageList,
+  UserStatus,
+  WidgetContainer,
+} from "./ChatWidget.styles";
 
 const ChatWidget = () => {
+  const [message, setMessage] = useState("");
+
+  const handleSend = () => {
+    // handle send message
+  };
+
   return (
     <WidgetContainer>
       <Accordion>
         <AccordionSummary
-          expandIcon={<KeyboardArrowUpIcon />}
+          // expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography>Accordion 1</Typography>
+          <UserStatus>
+            <Typography variant="subtitle1">User Name</Typography>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <OnlineBadge color="success" />
+              <OfflineBadge color="error" />
+            </Box>
+          </UserStatus>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
+          <MessageList>
+            {/* Replace with actual messages */}
+            <Message sender>
+              <Typography variant="body1">Hello</Typography>
+            </Message>
+            <Message>
+              <Typography variant="body1">Hi</Typography>
+            </Message>
+          </MessageList>
         </AccordionDetails>
+        <AccordionActions>
+          <Box
+            sx={{ display: "flex", width: "100%" }}
+            component="form"
+            noValidate
+            autoComplete="off"
+          >
+            <TextField
+              variant="outlined"
+              fullWidth
+              size="small"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            />
+            <IconButton size="small" color="secondary" onClick={handleSend}>
+              <SendIcon />
+            </IconButton>
+          </Box>
+        </AccordionActions>
       </Accordion>
     </WidgetContainer>
   );

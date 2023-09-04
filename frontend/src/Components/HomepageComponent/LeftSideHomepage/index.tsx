@@ -9,6 +9,8 @@ const LeftsideHomepage = () => {
         display: "flex",
         flexDirection: "column",
         gap: "15px",
+        position: "fixed",
+        width: "28%",
       }}
     >
       <Interests />

@@ -78,6 +78,7 @@ const HomePage = () => {
         <Grid
           sx={{
             display: { xs: "none", md: "inherit" },
+            position: "relative",
           }}
           item
           xs={0}

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import USER from "../Models/User.schema";
-import { ResponseDTO } from "../Routes/users";
+import { LoginResponseDTO, ResponseDTO } from "../Routes/users";
 
 export interface CreateUserDTO {
   username: string;
@@ -61,7 +61,7 @@ export async function RegisterUserService(
 
 export async function LoginService(
   credentials: Partial<CreateUserDTO>
-): Promise<ResponseDTO> {
+): Promise<LoginResponseDTO> {
   try {
     const login_instance: UserMongooseResponse | any = await USER.findOne({
       email: credentials.email,
@@ -78,8 +78,11 @@ export async function LoginService(
       return {
         message: [`Login SuccessFul`],
         success: true,
+        id: login_instance._id.toString(),
       };
     } else {
+      console.log(login_instance);
+
       return {
         message: [`Credentials are incorrect.`],
         success: false,
