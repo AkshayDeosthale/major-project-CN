@@ -3,6 +3,7 @@ import {
   LoginService,
   RegisterUserService,
 } from "../Controllers/Users.controller";
+import passport from "passport";
 
 export interface ResponseDTO {
   message: string[];
@@ -24,14 +25,18 @@ router.post("/register", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/login", async (req: Request, res: Response) => {
-  const response: LoginResponseDTO = await LoginService(req.body);
+router.post(
+  "/login",
+  // passport.authenticate("local"),
+  async (req: Request, res: Response) => {
+    const response: LoginResponseDTO = await LoginService(req.body);
 
-  if (response.success) {
-    res.status(200).cookie("user", response.id).send(response);
-  } else {
-    res.status(500).send(response);
+    if (response.success) {
+      res.status(200).cookie("user", response.id).send(response);
+    } else {
+      res.status(500).send(response);
+    }
   }
-});
+);
 
 module.exports = router;

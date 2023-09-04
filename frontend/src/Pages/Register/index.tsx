@@ -16,7 +16,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { USER_URL } from "../../GLOBAL_CONSTANTS";
+import { INTERESTS, USER_URL } from "../../GLOBAL_CONSTANTS";
 import { CardContainer, Heading, LoginContainer } from "../Login/Login.Styles";
 
 const RegisterPage = () => {
@@ -196,14 +196,5 @@ const RegisterPage = () => {
     </LoginContainer>
   );
 };
-
-export const INTERESTS = [
-  { title: "The Shawshank Redemption", id: 1994 },
-  { title: "The Godfather", id: 1972 },
-  { title: "The Godfather: Part II", id: 1974 },
-  { title: "The Dark Knight", id: 2008 },
-  { title: "12 Angry Men", id: 1957 },
-  { title: "Schindler's List", id: 1993 },
-];
 
 export default RegisterPage;

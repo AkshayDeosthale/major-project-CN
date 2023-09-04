@@ -22,7 +22,9 @@ app.use("/users", require("./Routes/users"));
 app.use("/posts", require("./Routes/posts"));
 
 async function DBCONNECT() {
-  return await mongoose.connect(process.env.MONGODB_URL as string);
+  const dbName = "QUORA_CLONE";
+  const dbUrl = `${process.env.MONGODB_URL as string}/${dbName}`;
+  return await mongoose.connect(dbUrl);
 }
 
 app.listen(port, () => {
