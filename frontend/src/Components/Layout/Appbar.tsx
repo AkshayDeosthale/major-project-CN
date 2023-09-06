@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import DvrIcon from "@mui/icons-material/Dvr";
 import HomeIcon from "@mui/icons-material/Home";
 import LocalActivityIcon from "@mui/icons-material/LocalActivity";
 import { Tooltip } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   AppbarContainer,
   AppbarDataContainer,
@@ -12,6 +13,7 @@ import {
   UserDetailConatiner,
 } from "./Layout.styles";
 import AccountMenu from "./UserOptions";
+import { useCookies } from "react-cookie";
 
 const menuitems = [
   {
@@ -32,6 +34,17 @@ const menuitems = [
 ];
 
 function Appbar() {
+  const navigate = useNavigate();
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "userID",
+    "quoraSession",
+    "userDetail",
+  ]);
+
+  if (!cookies.userID || !cookies.userDetail) {
+    navigate("/login");
+  }
+
   return (
     <AppbarContainer>
       <AppbarDataContainer sx={{ mx: "auto" }}>

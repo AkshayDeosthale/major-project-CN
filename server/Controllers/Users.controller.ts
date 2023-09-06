@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import USER from "../Models/User.schema";
-import { LoginResponseDTO, ResponseDTO } from "../Routes/users";
+import { ResponseDTO } from "../Routes/users";
 
 export interface CreateUserDTO {
   username: string;
@@ -59,40 +59,41 @@ export async function RegisterUserService(
   }
 }
 
-export async function LoginService(
-  credentials: Partial<CreateUserDTO>
-): Promise<LoginResponseDTO> {
-  try {
-    const login_instance: UserMongooseResponse | any = await USER.findOne({
-      email: credentials.email,
-    }).exec();
+//manual login
+// export async function LoginService(
+//   credentials: Partial<CreateUserDTO>
+// ): Promise<LoginResponseDTO> {
+//   try {
+//     const login_instance: UserMongooseResponse | any = await USER.findOne({
+//       email: credentials.email,
+//     }).exec();
 
-    if (login_instance == null) {
-      throw new Error("User does not exist");
-    }
+//     if (login_instance == null) {
+//       throw new Error("User does not exist");
+//     }
 
-    if (
-      login_instance?.email === credentials.email &&
-      login_instance?.password === credentials.password
-    ) {
-      return {
-        message: [`Login SuccessFul`],
-        success: true,
-        id: login_instance._id.toString(),
-      };
-    } else {
-      console.log(login_instance);
+//     if (
+//       login_instance?.email === credentials.email &&
+//       login_instance?.password === credentials.password
+//     ) {
+//       return {
+//         message: [`Login SuccessFul`],
+//         success: true,
+//         id: login_instance._id.toString(),
+//       };
+//     } else {
+//       console.log(login_instance);
 
-      return {
-        message: [`Credentials are incorrect.`],
-        success: false,
-      };
-    }
-  } catch (error) {
-    console.log(error);
-    return {
-      message: [`This User does not exist.`],
-      success: false,
-    };
-  }
-}
+//       return {
+//         message: [`Credentials are incorrect.`],
+//         success: false,
+//       };
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     return {
+//       message: [`This User does not exist.`],
+//       success: false,
+//     };
+//   }
+// }

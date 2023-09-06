@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Logout from "@mui/icons-material/Logout";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
@@ -9,29 +10,40 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Tooltip from "@mui/material/Tooltip";
+import axios from "axios";
 import * as React from "react";
+import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
+import { USER_URL } from "../../GLOBAL_CONSTANTS";
+import { toast } from "react-toastify";
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "userID",
+    "quoraSession",
+    "userDetail",
+  ]);
 
-  const handleLogout = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
-    function deleteAllCookies() {
-      const cookies = document.cookie.split(";");
-
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i];
-        const eqPos = cookie.indexOf("=");
-        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-      }
-    }
+  const handleLogout = async (
+    e: React.MouseEvent<HTMLLIElement, MouseEvent>
+  ) => {
     e.preventDefault();
-    localStorage.clear();
-    sessionStorage.clear();
-    deleteAllCookies();
-    navigate("/login");
+    try {
+      const res = await axios.get(`${USER_URL}/logout`, {
+        withCredentials: true,
+      });
+      localStorage.clear();
+      sessionStorage.clear();
+      removeCookie("quoraSession");
+      removeCookie("userID");
+      removeCookie("userDetail");
+      navigate("/login");
+      toast.success(res.data.message[0]);
+    } catch (error) {
+      toast.error("Network or API error");
+    }
   };
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -93,7 +105,7 @@ export default function AccountMenu() {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         <MenuItem onClick={handleClose}>
-          <Avatar src="/1.jpg" /> Profile
+          <Avatar src="/1.jpg" /> {cookies.userDetail.username}
         </MenuItem>
 
         <Divider />
@@ -103,12 +115,7 @@ export default function AccountMenu() {
           </ListItemIcon>
           Following
         </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <Settings fontSize="small" />
-          </ListItemIcon>
-          Settings
-        </MenuItem>
+
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />

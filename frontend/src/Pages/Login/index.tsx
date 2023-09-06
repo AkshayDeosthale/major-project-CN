@@ -7,6 +7,7 @@ import { CardContainer, Heading, LoginContainer } from "./Login.Styles";
 import axios from "axios";
 import { USER_URL } from "../../GLOBAL_CONSTANTS";
 import { toast } from "react-toastify";
+import { useCookies } from "react-cookie";
 
 type Inputs = {
   email: string;
@@ -14,6 +15,10 @@ type Inputs = {
 };
 const Login = () => {
   const navigate = useNavigate();
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "userID",
+    "userDetail",
+  ]);
   const {
     register,
     handleSubmit,
@@ -25,8 +30,8 @@ const Login = () => {
       const res = await axios.post(`${USER_URL}/login`, data, {
         withCredentials: true,
       });
-
-      document.cookie = `user=${res.data.id}`;
+      setCookie("userID", res.data.id);
+      setCookie("userDetail", res.data.userDetail);
       toast.success(res.data.message[0]);
       navigate("/");
     } catch (error: any) {

@@ -1,8 +1,13 @@
+import cookieParser from "cookie-parser";
+import cors from "cors";
 import dotenv from "dotenv";
 import express, { Express } from "express";
 import mongoose from "mongoose";
-import cors from "cors";
-import cookieParser from "cookie-parser";
+
+//used for session cookie and auth
+import session from "express-session";
+const passport = require("passport");
+const LocalStrategy = require("./Config/passport-local-strategy");
 
 dotenv.config();
 
@@ -16,6 +21,21 @@ app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 
 app.use(cookieParser());
+
+app.use(
+  session({
+    name: "quoraSession",
+    secret: "Akshay Is Great",
+    saveUninitialized: false,
+    resave: false,
+    cookie: {
+      maxAge: 1000 * 60 * 100,
+    },
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use("/users", require("./Routes/users"));
 

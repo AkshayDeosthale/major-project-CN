@@ -1,26 +1,47 @@
 import passport from "passport";
-import LocalStrategy from "passport-local";
+const LocalStrategy = require("passport-local");
 import USER from "../Models/User.schema";
 import { UserMongooseResponse } from "../Controllers/Users.controller";
+import { LoginResponseDTO, ResponseDTO } from "../Routes/users";
 
 passport.use(
-  new LocalStrategy.Strategy({ usernameField: "email" }, function (
-    username,
-    password,
-    done
+  new LocalStrategy({ usernameField: "email" }, function (
+    username: string,
+    password: string,
+    done: (error: ResponseDTO | null, user?: LoginResponseDTO | false) => void
   ) {
-    USER.findOne({ email: username }, function (err: any, user: any) {
-      if (err) {
+    USER.findOne({ email: username })
+      .then((user: any) => {
+        if (!user) {
+          console.log("user does not exist");
+          return done(
+            {
+              message: [`User does not exist.`],
+              success: false,
+            },
+            false
+          );
+        }
+        if (user.password !== password) {
+          return done(
+            {
+              message: [`Credentials are incorrect.`],
+              success: false,
+            },
+            false
+          );
+        }
+        console.log("Authenticated");
+        return done(null, {
+          message: [`Login SuccessFul`],
+          success: true,
+          id: user._id.toString(),
+          userDetail: user,
+        });
+      })
+      .catch((err: any) => {
         return done(err);
-      }
-      if (!user) {
-        return done(null, false);
-      }
-      if (!user.verifyPassword(password)) {
-        return done(null, false);
-      }
-      return done(null, user);
-    });
+      });
   })
 );
 
