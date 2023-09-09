@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -8,8 +10,24 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/material";
 import { WritePostInput } from "./MainHomepageContent.styles";
+import { Post, User } from ".";
+import dayjs from "dayjs";
 
-export default function Comments() {
+export interface Comments {
+  content: string;
+  user: User;
+  post: Post;
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+interface Props {
+  comments: Comments[];
+}
+
+export default function Comments({ comments }: Props) {
   return (
     <List sx={{ width: "100%", bgcolor: "background.paper" }}>
       <ListItem alignItems="flex-start">
@@ -25,6 +43,33 @@ export default function Comments() {
           <WritePostInput color="warning" placeholder="Add comment" />
         </Box>
       </ListItem>
+
+      {comments.map((comment, key) => (
+        <React.Fragment key={key}>
+          <ListItem alignItems="flex-start">
+            <ListItemAvatar>
+              <Avatar alt="Remy Sharp" src="/1.jpg" />
+            </ListItemAvatar>
+            <ListItemText
+              primary={comment.content}
+              secondary={
+                <React.Fragment>
+                  <Typography
+                    sx={{ display: "inline" }}
+                    component="span"
+                    variant="body2"
+                    color="text.primary"
+                  >
+                    {comment.user.username}
+                  </Typography>
+                  {`- ${dayjs(comment.createdAt).format("DD MMMM YYYY HH:mm")}`}
+                </React.Fragment>
+              }
+            />
+          </ListItem>
+          <Divider variant="inset" component="li" />
+        </React.Fragment>
+      ))}
 
       <ListItem alignItems="flex-start">
         <ListItemAvatar>

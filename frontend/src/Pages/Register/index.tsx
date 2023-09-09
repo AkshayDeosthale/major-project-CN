@@ -10,13 +10,12 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
-import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
-import { INTERESTS, USER_URL } from "../../GLOBAL_CONSTANTS";
+import AxiosInstance from "../../Configs/AxiosInstance";
+import { INTERESTS } from "../../GLOBAL_CONSTANTS";
 import { CardContainer, Heading, LoginContainer } from "../Login/Login.Styles";
 
 const RegisterPage = () => {
@@ -57,7 +56,7 @@ const RegisterPage = () => {
       interests: newinterests,
     };
     try {
-      const res = await axios.post(`${USER_URL}/register`, data);
+      const res = await AxiosInstance.post(`/users/register`, data);
       toast.success(res.data.message[0]);
       navigate("/login");
     } catch (error: any) {

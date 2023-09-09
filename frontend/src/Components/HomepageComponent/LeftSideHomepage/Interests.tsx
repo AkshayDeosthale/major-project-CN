@@ -17,7 +17,7 @@ const Interests = () => {
     "quoraSession",
     "userDetail",
   ]);
-  const interestList: string[] = cookies.userDetail.interests;
+  const interestList: string[] = cookies?.userDetail?.interests;
 
   return (
     <Card>
@@ -25,7 +25,7 @@ const Interests = () => {
         <ListItem sx={{ fontFamily: "cursive" }} alignItems="flex-start">
           Your Interests
         </ListItem>
-        {interestList.map((interest, key) => (
+        {interestList?.map((interest, key) => (
           <ListItem
             key={key}
             secondaryAction={

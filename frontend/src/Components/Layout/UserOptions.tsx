@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Logout from "@mui/icons-material/Logout";
 import PersonAdd from "@mui/icons-material/PersonAdd";
-import Settings from "@mui/icons-material/Settings";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
@@ -10,12 +9,11 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Tooltip from "@mui/material/Tooltip";
-import axios from "axios";
 import * as React from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
-import { USER_URL } from "../../GLOBAL_CONSTANTS";
 import { toast } from "react-toastify";
+import AxiosInstance from "../../Configs/AxiosInstance";
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -30,19 +28,16 @@ export default function AccountMenu() {
     e: React.MouseEvent<HTMLLIElement, MouseEvent>
   ) => {
     e.preventDefault();
+
     try {
-      const res = await axios.get(`${USER_URL}/logout`, {
+      const res = await AxiosInstance.get(`/users/logout`, {
         withCredentials: true,
       });
-      localStorage.clear();
-      sessionStorage.clear();
-      removeCookie("quoraSession");
-      removeCookie("userID");
-      removeCookie("userDetail");
+
       navigate("/login");
       toast.success(res.data.message[0]);
     } catch (error) {
-      toast.error("Network or API error");
+      console.log(error);
     }
   };
   const open = Boolean(anchorEl);
@@ -105,7 +100,7 @@ export default function AccountMenu() {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         <MenuItem onClick={handleClose}>
-          <Avatar src="/1.jpg" /> {cookies.userDetail.username}
+          <Avatar src="/1.jpg" /> {cookies?.userDetail?.username}
         </MenuItem>
 
         <Divider />

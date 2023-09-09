@@ -10,6 +10,15 @@ passport.use(
     password: string,
     done: (error: ResponseDTO | null, user?: LoginResponseDTO | false) => void
   ) {
+    if (username === "general@user") {
+      return done(
+        {
+          message: [`Duplicate key error: Username or Email Already exists`],
+          success: false,
+        },
+        false
+      );
+    }
     USER.findOne({ email: username })
       .then((user: any) => {
         if (!user) {
@@ -50,12 +59,16 @@ passport.serializeUser(function (user: any, done) {
 });
 
 passport.deserializeUser(function (id: string, done) {
-  USER.findById(id, function (err: any, user: UserMongooseResponse) {
-    if (err) {
-      return err;
-    }
+  try {
+    const user = USER.findById(id);
     return done(null, user);
-  });
+  } catch (error) {
+    return error;
+  }
 });
+
+// passport.setAuthenticatedUser = function (req,res,next) {
+
+// }
 
 module.exports = passport;

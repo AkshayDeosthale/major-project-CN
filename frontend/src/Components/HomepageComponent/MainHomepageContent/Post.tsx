@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
-import ClearIcon from "@mui/icons-material/Clear";
-import TrendingDownIcon from "@mui/icons-material/TrendingDown";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import DoneAllIcon from "@mui/icons-material/DoneAll";
+import MoodIcon from "@mui/icons-material/Mood";
 import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -10,15 +10,30 @@ import CardHeader from "@mui/material/CardHeader";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { red } from "@mui/material/colors";
+import dayjs from "dayjs";
 import { useState } from "react";
+import { useCookies } from "react-cookie";
+import { Post as PostProp } from ".";
 import Comments from "./Comments";
 import {
   PostNameAndFollowContainer,
   WriteAskButton,
 } from "./MainHomepageContent.styles";
 
-export default function Post() {
+interface Props {
+  post: PostProp;
+  fetchTimelinePosts: () => Promise<void>;
+}
+
+export default function Post({ post, fetchTimelinePosts }: Props) {
   const [commentsOpen, setcommentsOpen] = useState(false);
+  const [liked, setLiked] = useState(false);
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "userID",
+    "userDetail",
+    "quoraSession",
+  ]);
+
   return (
     <Card sx={{ width: "100%" }}>
       <CardHeader
@@ -29,28 +44,27 @@ export default function Post() {
             aria-label="recipe"
           ></Avatar>
         }
-        action={
-          <IconButton aria-label="hide">
-            <ClearIcon />
-          </IconButton>
-        }
         title={
           <PostNameAndFollowContainer>
             <Typography sx={{ fontFamily: "cursive" }}>
-              Shrimp and Chorizo Paella
+              {post.from.username}
             </Typography>
-            <WriteAskButton
-              sx={{
-                width: "70px",
-                backgroundColor: "purple",
-                color: "white",
-              }}
-            >
-              Follow
-            </WriteAskButton>
+            {post.from._id === cookies.userID ? (
+              <DoneAllIcon sx={{ color: "green", fontSize: "15px" }} />
+            ) : (
+              <WriteAskButton
+                sx={{
+                  width: "70px",
+                  backgroundColor: "purple",
+                  color: "white",
+                }}
+              >
+                Follow
+              </WriteAskButton>
+            )}
           </PostNameAndFollowContainer>
         }
-        subheader="September 14, 2016"
+        subheader={dayjs(post.createdAt).format("DD MMMM YYYY HH:mm")}
       />
       {/* <CardMedia
         component="img"
@@ -58,20 +72,19 @@ export default function Post() {
         image="/paella.jpg"
         alt="Paella dish"
       /> */}
-      <CardContent>
+      <CardContent sx={{ paddingTop: 0 }}>
+        <Typography variant="h6" color="text.secondary">
+          {post.title}
+        </Typography>
         <Typography variant="body2" color="text.secondary">
-          This impressive paella is a perfect party dish and a fun meal to cook
-          together with your guests. Add 1 cup of frozen peas along with the
-          mussels, if you like.
+          {post.description}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="Like">
-          <TrendingUpIcon sx={{ color: "red" }} />
+        <IconButton aria-label="Like" onClick={() => setLiked(!liked)}>
+          <MoodIcon sx={{ color: liked ? "green" : "inherit" }} />
         </IconButton>
-        <IconButton aria-label="Like">
-          <TrendingDownIcon />
-        </IconButton>
+
         <IconButton
           onClick={() => setcommentsOpen(!commentsOpen)}
           aria-label="Comment"
@@ -80,7 +93,7 @@ export default function Post() {
           <ChatBubbleOutlineIcon />
         </IconButton>
       </CardActions>
-      {commentsOpen && <Comments />}
+      {commentsOpen && <Comments comments={post.comments} />}
     </Card>
   );
 }

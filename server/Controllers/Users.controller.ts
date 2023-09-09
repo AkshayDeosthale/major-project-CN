@@ -97,3 +97,15 @@ export async function RegisterUserService(
 //     };
 //   }
 // }
+
+export async function GetAllUsers() {
+  try {
+    const user = await USER.find({});
+    return user;
+  } catch (error) {
+    return {
+      message: [`Error occurred , check server for logs`],
+      success: false,
+    };
+  }
+}

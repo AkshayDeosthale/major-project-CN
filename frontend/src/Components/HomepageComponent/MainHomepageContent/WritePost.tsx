@@ -4,10 +4,47 @@ import {
   WritePostContainer,
   WritePostInput,
 } from "./MainHomepageContent.styles";
+import { useState } from "react";
+import PostToAllDialogue from "./PostToAllDialogue";
+import PostToUser from "./PostToUser";
 
 const WritePost = () => {
+  const [title, setTitle] = useState<string>("");
+
+  //post all dialogue
+  const [openAll, setOpenAll] = useState(false);
+  const handleAllClickOpen = () => {
+    setOpenAll(true);
+  };
+  const handleAllClose = () => {
+    setOpenAll(false);
+  };
+
+  //post all dialogue
+  const [openUserSpecific, setOpenUserSpecific] = useState(false);
+  const handleUserSpecificClickOpen = () => {
+    setOpenUserSpecific(true);
+  };
+  const handleUserSpecificClose = () => {
+    setOpenUserSpecific(false);
+  };
+
   return (
     <WritePostContainer>
+      <PostToAllDialogue
+        fetchTimelinePosts={() => {}}
+        handleClose={handleAllClose}
+        open={openAll}
+        setTitle={setTitle}
+        title={title}
+      />
+      <PostToUser
+        fetchTimelinePosts={() => {}}
+        handleClose={handleUserSpecificClose}
+        open={openUserSpecific}
+        setTitle={setTitle}
+        title={title}
+      />
       <Box
         sx={{
           display: "flex",
@@ -20,6 +57,8 @@ const WritePost = () => {
         <WritePostInput
           color="warning"
           placeholder="What do you want to ask or share?"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
       </Box>
       <Box
@@ -31,9 +70,11 @@ const WritePost = () => {
           gap: "10px",
         }}
       >
-        <WriteAskButton> Ask Someone</WriteAskButton>
+        <WriteAskButton onClick={handleUserSpecificClickOpen}>
+          Ask Someone
+        </WriteAskButton>
         <Divider orientation="vertical" flexItem />
-        <WriteAskButton> Ask </WriteAskButton>
+        <WriteAskButton onClick={handleAllClickOpen}> Ask </WriteAskButton>
       </Box>
     </WritePostContainer>
   );

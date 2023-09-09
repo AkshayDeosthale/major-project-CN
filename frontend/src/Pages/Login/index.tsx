@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Box, Button, TextField } from "@mui/material";
+import { useCookies } from "react-cookie";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { CardContainer, Heading, LoginContainer } from "./Login.Styles";
-import axios from "axios";
-import { USER_URL } from "../../GLOBAL_CONSTANTS";
 import { toast } from "react-toastify";
-import { useCookies } from "react-cookie";
+import AxiosInstance from "../../Configs/AxiosInstance";
+import { CardContainer, Heading, LoginContainer } from "./Login.Styles";
+import { useEffect } from "react";
 
 type Inputs = {
   email: string;
@@ -18,7 +18,17 @@ const Login = () => {
   const [cookies, setCookie, removeCookie] = useCookies([
     "userID",
     "userDetail",
+    "quoraSession",
   ]);
+
+  useEffect(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+    removeCookie("quoraSession");
+    removeCookie("userID");
+    removeCookie("userDetail");
+  }, [[]]);
+
   const {
     register,
     handleSubmit,
@@ -27,7 +37,7 @@ const Login = () => {
   } = useForm();
   const onSubmit: SubmitHandler<any> = async (data: Inputs) => {
     try {
-      const res = await axios.post(`${USER_URL}/login`, data, {
+      const res = await AxiosInstance.post(`/users/login`, data, {
         withCredentials: true,
       });
       setCookie("userID", res.data.id);

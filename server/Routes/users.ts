@@ -1,13 +1,16 @@
 import express, { NextFunction, Request, Response } from "express";
 import passport from "passport";
 import {
+  GetAllUsers,
   RegisterUserService,
   UserMongooseResponse,
 } from "../Controllers/Users.controller";
+import USER from "../Models/User.schema";
 
 export interface ResponseDTO {
   message: string[];
   success: boolean;
+  data?: unknown;
 }
 
 export interface LoginResponseDTO extends ResponseDTO {
@@ -16,6 +19,27 @@ export interface LoginResponseDTO extends ResponseDTO {
 }
 
 const router = express.Router();
+
+//making a general user which is separate from real user
+router.use(async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const checkdefaultUserInstance = await USER.findOne({
+      email: "general@user",
+    });
+    if (!checkdefaultUserInstance) {
+      const creategeneralaUser = new USER({
+        username: "general",
+        email: "general@user",
+        password: "generaluser",
+      });
+      await creategeneralaUser.save();
+    }
+    next();
+  } catch (error) {
+    console.log(error);
+    next();
+  }
+});
 
 router.post("/register", async (req: Request, res: Response) => {
   const response: ResponseDTO = await RegisterUserService(req.body);
@@ -58,10 +82,21 @@ router.post("/login", (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.get("/logout", (req: Request, res: Response, next: NextFunction) => {
-  res.status(200).send({
-    message: [`User Logged out Successfully.`],
-    success: true,
-  });
+  req.logOut((done) => done);
+  res.status(200).send("logged out");
+});
+
+router.use((req, res, next) => {
+  if (req.isAuthenticated()) {
+    next();
+  } else {
+    res.status(444).send("User is not authenticated");
+  }
+});
+
+router.get("/all", async (req: Request, res: Response) => {
+  const response = await GetAllUsers();
+  res.status(200).send(response);
 });
 
 module.exports = router;

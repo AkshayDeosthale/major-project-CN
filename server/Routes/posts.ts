@@ -1,16 +1,25 @@
-import express, { NextFunction, Request, Response } from "express";
-import { birdFunction } from "../Controllers/Posts.controller";
+import express, { Request, Response } from "express";
+import { CreatePost, GetAllPosts } from "../Controllers/Posts.controller";
 const router = express.Router();
+const PostController = require("../Controllers/Posts.controller");
 
-// middleware that is specific to this router
-router.use((req: Request, res: Response, next: NextFunction) => {
-  console.log("Time: ", Date.now());
-  next();
-});
 // define the home page route
-router.get("/", (req: Request, res: Response) => {
-  birdFunction();
-  res.send("Birds home page");
+
+router.post("/create", async (req: Request, res: Response) => {
+  const response = await CreatePost(req.body);
+  if (response.success) {
+    res.status(200).send(response);
+  } else {
+    res.status(500).send(response);
+  }
+});
+router.get("/all", async (req: Request, res: Response) => {
+  const response = await GetAllPosts();
+  if (response.success) {
+    res.status(200).send(response);
+  } else {
+    res.status(500).send(response);
+  }
 });
 
 module.exports = router;

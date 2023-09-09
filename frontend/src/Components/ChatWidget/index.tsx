@@ -45,10 +45,10 @@ const ChatWidget = () => {
         <AccordionDetails>
           <MessageList>
             {/* Replace with actual messages */}
-            <Message sender>
+            <Message sender={true}>
               <Typography variant="body1">Hello</Typography>
             </Message>
-            <Message>
+            <Message sender={false}>
               <Typography variant="body1">Hi</Typography>
             </Message>
           </MessageList>

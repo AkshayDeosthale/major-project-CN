@@ -1,5 +1,3 @@
-export const USER_URL: string = "http://localhost:3000/users";
-
 export const INTERESTS = [
   { title: "Technology", id: 1994 },
   { title: "Food", id: 1972 },

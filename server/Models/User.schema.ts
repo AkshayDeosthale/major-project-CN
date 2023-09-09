@@ -12,9 +12,10 @@ const userSchema = new mongoose.Schema(
       required: [true, "Email is required"],
       unique: [true, "Email already exists"],
     },
+
     password: { type: String, required: [true, "Password is required"] },
     interests: [String],
-    followers: [String],
+    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "USER" }],
   },
   { timestamps: true }
 );
