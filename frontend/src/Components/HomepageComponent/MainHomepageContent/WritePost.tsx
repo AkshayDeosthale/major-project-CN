@@ -8,7 +8,11 @@ import { useState } from "react";
 import PostToAllDialogue from "./PostToAllDialogue";
 import PostToUser from "./PostToUser";
 
-const WritePost = () => {
+type Props = {
+  fetchTimelinePosts: () => Promise<void>;
+};
+
+const WritePost = ({ fetchTimelinePosts }: Props) => {
   const [title, setTitle] = useState<string>("");
 
   //post all dialogue
@@ -32,14 +36,14 @@ const WritePost = () => {
   return (
     <WritePostContainer>
       <PostToAllDialogue
-        fetchTimelinePosts={() => {}}
+        fetchTimelinePosts={fetchTimelinePosts}
         handleClose={handleAllClose}
         open={openAll}
         setTitle={setTitle}
         title={title}
       />
       <PostToUser
-        fetchTimelinePosts={() => {}}
+        fetchTimelinePosts={fetchTimelinePosts}
         handleClose={handleUserSpecificClose}
         open={openUserSpecific}
         setTitle={setTitle}

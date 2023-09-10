@@ -31,6 +31,8 @@ const RegisterPage = () => {
     setOpen(false);
   };
   const handleModalClose = (event: any, reason: any) => {
+    console.log(event);
+
     if (reason && reason == "backdropClick") return;
     handleClose();
   };
@@ -38,11 +40,9 @@ const RegisterPage = () => {
   //form and api
   const {
     register,
-    handleSubmit,
-    watch,
+
     reset,
     getValues,
-    formState: { errors },
   } = useForm();
   const onSubmit = async () => {
     const newinterests = value.map(
@@ -87,6 +87,8 @@ const RegisterPage = () => {
             getOptionLabel={(option) => option.title}
             value={value}
             onChange={(event: any, newValue: any) => {
+              console.log(event);
+
               setValue(newValue);
             }}
             renderInput={(params) => (

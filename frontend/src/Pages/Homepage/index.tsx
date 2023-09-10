@@ -20,6 +20,9 @@ const HomePage = () => {
     console.log(`Latitude : ${crd.latitude}`);
     console.log(`Longitude: ${crd.longitude}`);
     console.log(`More or less ${crd.accuracy} meters.`);
+    console.log(location);
+    console.log(ipAddress);
+
     getLocationInfo(crd.latitude, crd.longitude);
   }
   function errors(err: any) {

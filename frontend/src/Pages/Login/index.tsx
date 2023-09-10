@@ -27,14 +27,10 @@ const Login = () => {
     removeCookie("quoraSession");
     removeCookie("userID");
     removeCookie("userDetail");
+    console.log(cookies);
   }, [[]]);
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
+  const { register, handleSubmit } = useForm();
   const onSubmit: SubmitHandler<any> = async (data: Inputs) => {
     try {
       const res = await AxiosInstance.post(`/users/login`, data, {

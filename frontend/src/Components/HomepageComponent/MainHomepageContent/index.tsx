@@ -49,9 +49,9 @@ const MainHomepageContent = () => {
 
   return (
     <MainContentContainer>
-      <WritePost />
+      <WritePost fetchTimelinePosts={fetchTimelinePosts} />
       {postArray.map((post, key) => (
-        <Post fetchTimelinePosts={fetchTimelinePosts} key={key} post={post} />
+        <Post key={key} post={post} />
       ))}
     </MainContentContainer>
   );

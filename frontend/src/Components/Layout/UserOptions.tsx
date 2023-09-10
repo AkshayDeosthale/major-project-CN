@@ -18,11 +18,7 @@ import AxiosInstance from "../../Configs/AxiosInstance";
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
-  const [cookies, setCookie, removeCookie] = useCookies([
-    "userID",
-    "quoraSession",
-    "userDetail",
-  ]);
+  const [cookies] = useCookies(["userID", "quoraSession", "userDetail"]);
 
   const handleLogout = async (
     e: React.MouseEvent<HTMLLIElement, MouseEvent>

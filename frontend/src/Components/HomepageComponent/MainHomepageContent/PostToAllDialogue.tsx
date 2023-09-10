@@ -35,21 +35,15 @@ export default function PostToAllDialogue({
 }: Props) {
   //interest
   const [Interest, setInterest] = React.useState("Technology");
-  const [cookies, setCookie, removeCookie] = useCookies([
-    "userID",
-    "userDetail",
-    "quoraSession",
-  ]);
+  const [cookies] = useCookies(["userID", "userDetail", "quoraSession"]);
 
   //form and api
   const {
     register,
-    handleSubmit,
-    watch,
+
     reset,
     getValues,
     setValue,
-    formState: { errors },
   } = useForm();
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -67,9 +61,12 @@ export default function PostToAllDialogue({
     };
     try {
       const res = await AxiosInstance.post(`/posts/create`, data);
+      console.log(res);
+
       handleClose();
       setTitle("");
       reset();
+      fetchTimelinePosts();
     } catch (error) {
       console.log(error);
     }

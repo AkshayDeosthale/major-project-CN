@@ -42,12 +42,10 @@ export default function PostToUser({
 }: Props) {
   const {
     register,
-    handleSubmit,
-    watch,
+
     reset,
     getValues,
     setValue,
-    formState: { errors },
   } = useForm();
 
   const [options, setOptions] = React.useState<readonly UserAutocompleteType[]>(
@@ -56,11 +54,7 @@ export default function PostToUser({
   const [autocompleteOpne, setAutocompleteOpne] = React.useState(false);
   const loading = open && options.length === 0;
 
-  const [cookies, setCookie, removeCookie] = useCookies([
-    "userID",
-    "userDetail",
-    "quoraSession",
-  ]);
+  const [cookies] = useCookies(["userID", "userDetail", "quoraSession"]);
 
   //Users from autocomplete
   const getAllUsers = async () => {
@@ -110,9 +104,12 @@ export default function PostToUser({
     };
     try {
       const res = await AxiosInstance.post(`/posts/create`, data);
+      console.log(res);
+
       handleClose();
       setTitle("");
       reset();
+      fetchTimelinePosts();
     } catch (error) {
       console.log(error);
     }
@@ -131,6 +128,8 @@ export default function PostToUser({
             fullWidth
             open={autocompleteOpne}
             onChange={(event: any, newValue: any) => {
+              console.log(event);
+
               setValue("to", newValue.year);
             }}
             onOpen={() => {

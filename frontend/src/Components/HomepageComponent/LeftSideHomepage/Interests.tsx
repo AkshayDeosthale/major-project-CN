@@ -12,11 +12,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useCookies } from "react-cookie";
 
 const Interests = () => {
-  const [cookies, setCookie, removeCookie] = useCookies([
-    "userID",
-    "quoraSession",
-    "userDetail",
-  ]);
+  const [cookies] = useCookies(["userID", "quoraSession", "userDetail"]);
   const interestList: string[] = cookies?.userDetail?.interests;
 
   return (
