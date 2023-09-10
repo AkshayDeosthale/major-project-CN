@@ -18,8 +18,9 @@ import * as React from "react";
 import AxiosInstance from "../../../Configs/AxiosInstance";
 import { INTERESTS } from "../../../GLOBAL_CONSTANTS";
 import { User } from ".";
-import { useForm } from "react-hook-form";
+
 import { useCookies } from "react-cookie";
+import { useForm } from "react-hook-form";
 interface Props {
   open: boolean;
   handleClose: () => void;

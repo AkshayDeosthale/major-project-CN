@@ -14,9 +14,10 @@ import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import * as React from "react";
 import { INTERESTS } from "../../../GLOBAL_CONSTANTS";
-import { useForm } from "react-hook-form";
+
 import AxiosInstance from "../../../Configs/AxiosInstance";
 import { useCookies } from "react-cookie";
+import { useForm } from "react-hook-form";
 
 interface Props {
   open: boolean;

@@ -37,7 +37,7 @@ const MainHomepageContent = () => {
   const fetchTimelinePosts = async () => {
     try {
       const res = await AxiosInstance.get(`/posts/all`);
-      setPostArray(res.data.data);
+      setPostArray(res.data.data.reverse());
     } catch (error) {
       console.log(error);
     }

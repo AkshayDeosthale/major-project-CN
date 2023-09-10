@@ -2,12 +2,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Box, Button, TextField } from "@mui/material";
 import { useCookies } from "react-cookie";
-import { SubmitHandler, useForm } from "react-hook-form";
+
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import AxiosInstance from "../../Configs/AxiosInstance";
 import { CardContainer, Heading, LoginContainer } from "./Login.Styles";
 import { useEffect } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 type Inputs = {
   email: string;
@@ -27,7 +28,6 @@ const Login = () => {
     removeCookie("quoraSession");
     removeCookie("userID");
     removeCookie("userDetail");
-    console.log(cookies);
   }, [[]]);
 
   const { register, handleSubmit } = useForm();

@@ -3,7 +3,7 @@ import DvrIcon from "@mui/icons-material/Dvr";
 import HomeIcon from "@mui/icons-material/Home";
 import LocalActivityIcon from "@mui/icons-material/LocalActivity";
 import { Tooltip } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   AppbarContainer,
   AppbarDataContainer,
@@ -35,6 +35,7 @@ const menuitems = [
 
 function Appbar() {
   const navigate = useNavigate();
+
   const [cookies] = useCookies(["userID", "quoraSession", "userDetail"]);
 
   if (!cookies.userID || !cookies.userDetail) {
