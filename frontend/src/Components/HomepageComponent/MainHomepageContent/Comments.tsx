@@ -8,10 +8,13 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
-import { Box } from "@mui/material";
+import { Box, IconButton, InputAdornment } from "@mui/material";
 import { WritePostInput } from "./MainHomepageContent.styles";
 import { Post, User } from ".";
 import dayjs from "dayjs";
+import AxiosInstance from "../../../Configs/AxiosInstance";
+import { useCookies } from "react-cookie";
+import SendIcon from "@mui/icons-material/Send";
 
 export interface Comments {
   content: string;
@@ -25,9 +28,34 @@ export interface Comments {
 
 interface Props {
   comments: Comments[];
+  postId: string;
 }
 
-export default function Comments({ comments }: Props) {
+export default function Comments({ comments, postId }: Props) {
+  const [postComents, setpostComents] =
+    React.useState<Partial<Comments[]>>(comments);
+  const [userComment, setuserComment] = React.useState<string>("");
+  const [cookies] = useCookies(["userID", "userDetail", "quoraSession"]);
+
+  const submitComment = async () => {
+    try {
+      const data = {
+        user: cookies.userID,
+        content: userComment,
+        post: postId,
+      };
+
+      const res = await AxiosInstance.post(`/comments/create/${postId}`, data, {
+        withCredentials: true,
+      });
+
+      setpostComents([...postComents, res.data.data]);
+      setuserComment("");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <List sx={{ width: "100%", bgcolor: "background.paper" }}>
       <ListItem alignItems="flex-start">
@@ -37,21 +65,36 @@ export default function Comments({ comments }: Props) {
             width: "100%",
             gap: "15px",
             alignItems: "center",
+            position: "relative",
           }}
         >
           <Avatar sx={{ width: 28, height: 28 }} alt="hi" src="/1.jpg" />
-          <WritePostInput color="warning" placeholder="Add comment" />
+          <WritePostInput
+            color="warning"
+            placeholder="Add comment"
+            value={userComment}
+            onChange={(e) => setuserComment(e.target.value)}
+          />
+          <IconButton
+            sx={{ position: "absolute", right: 6 }}
+            onClick={submitComment}
+            edge="end"
+            size="small"
+            color="secondary"
+          >
+            <SendIcon />
+          </IconButton>
         </Box>
       </ListItem>
 
-      {comments.map((comment, key) => (
+      {postComents.reverse().map((comment, key) => (
         <React.Fragment key={key}>
           <ListItem alignItems="flex-start">
             <ListItemAvatar>
               <Avatar alt="Remy Sharp" src="/1.jpg" />
             </ListItemAvatar>
             <ListItemText
-              primary={comment.content}
+              primary={comment?.content}
               secondary={
                 <React.Fragment>
                   <Typography
@@ -60,9 +103,11 @@ export default function Comments({ comments }: Props) {
                     variant="body2"
                     color="text.primary"
                   >
-                    {comment.user.username}
+                    {comment?.user.username}
                   </Typography>
-                  {`- ${dayjs(comment.createdAt).format("DD MMMM YYYY HH:mm")}`}
+                  {`- ${dayjs(comment?.createdAt).format(
+                    "DD MMMM YYYY HH:mm"
+                  )}`}
                 </React.Fragment>
               }
             />

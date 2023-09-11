@@ -33,8 +33,11 @@ export async function CreatePost(data: CreatePostDTO): Promise<ResponseDTO> {
 
 export async function GetAllPosts(): Promise<any> {
   try {
-    const posts = await POST.find({}).populate("to").populate("from").exec();
-    console.log(posts);
+    const posts = await POST.find({})
+      .populate("to")
+      .populate("from")
+      .populate({ path: "comments", populate: { path: "user" } })
+      .exec();
 
     return {
       success: true,

@@ -41,6 +41,8 @@ app.use("/users", require("./Routes/users"));
 
 app.use("/posts", require("./Routes/posts"));
 
+app.use("/comments", require("./Routes/comments"));
+
 async function DBCONNECT() {
   const dbName = "QUORA_CLONE";
   const dbUrl = `${process.env.MONGODB_URL as string}/${dbName}`;

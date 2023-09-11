@@ -88,7 +88,7 @@ export default function Post({ post }: Props) {
           <ChatBubbleOutlineIcon />
         </IconButton>
       </CardActions>
-      {commentsOpen && <Comments comments={post.comments} />}
+      {commentsOpen && <Comments postId={post._id} comments={post.comments} />}
     </Card>
   );
 }

@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
-import USER from "../Models/User.schema";
+import USER, { UserInterface, UserModel } from "../Models/User.schema";
 import { ResponseDTO } from "../Routes/users";
+import { Request, Response } from "express";
 
 export interface CreateUserDTO {
   username: string;
@@ -102,6 +103,35 @@ export async function GetAllUsers() {
   try {
     const user = await USER.find({});
     return user;
+  } catch (error) {
+    return {
+      message: [`Error occurred , check server for logs`],
+      success: false,
+    };
+  }
+}
+
+export async function UpdateProfile(req: Request, res: Response, id: string) {
+  try {
+    let user: any = await USER.findById(id);
+    USER.uploadAvatar(req, res, function (error: any) {
+      if (error) {
+        console.log(error);
+
+        return {
+          message: [`Error occurred , check server for logs`],
+          success: false,
+        };
+      }
+      if (req.file) {
+        user.avatar = USER.avatarPath + "/" + req.file.fieldname;
+      }
+      user.save();
+    });
+    return {
+      message: [`Image saved Successfully `],
+      success: true,
+    };
   } catch (error) {
     return {
       message: [`Error occurred , check server for logs`],

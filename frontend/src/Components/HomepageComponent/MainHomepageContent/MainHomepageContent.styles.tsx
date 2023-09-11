@@ -33,7 +33,7 @@ export const WritePostInput = styled("input")<InputProps>(({ theme }) => ({
   height: "30px",
   borderRadius: "40px",
   border: "none",
-
+  position: "relative",
   backgroundColor: "#f1f2f2",
   padding: "5px 5px 5px 20px",
   [theme.breakpoints.down("md")]: {},
