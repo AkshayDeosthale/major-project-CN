@@ -1,7 +1,9 @@
-import mongoose from "mongoose";
-import USER, { UserInterface, UserModel } from "../Models/User.schema";
-import { ResponseDTO } from "../Routes/users";
 import { Request, Response } from "express";
+import fs from "fs";
+import mongoose from "mongoose";
+import path from "path";
+import USER from "../Models/User.schema";
+import { ResponseDTO } from "../Routes/users";
 
 export interface CreateUserDTO {
   username: string;
@@ -18,6 +20,7 @@ export interface UserMongooseResponse extends mongoose.Document {
   followers: string[];
   createdAt: Date;
   updatedAt: Date;
+  avatar: string;
   __v: number;
 }
 
@@ -124,13 +127,27 @@ export async function UpdateProfile(req: Request, res: Response, id: string) {
         };
       }
       if (req.file) {
-        user.avatar = USER.avatarPath + "/" + req.file.fieldname;
+        if (user.avatar) {
+          const existsSync = fs.existsSync(user.avatar);
+          if (existsSync) {
+            fs.unlinkSync(user.avatar);
+          }
+        }
+
+        user.avatar = path.join(
+          __dirname,
+          "..",
+          USER.avatarPath,
+          req.file.filename
+        );
       }
+
       user.save();
     });
     return {
       message: [`Image saved Successfully `],
       success: true,
+      data: user,
     };
   } catch (error) {
     return {

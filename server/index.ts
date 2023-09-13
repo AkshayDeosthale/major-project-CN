@@ -37,6 +37,8 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use("/users", express.static(__dirname + "/uploads"));
+
 app.use("/users", require("./Routes/users"));
 
 app.use("/posts", require("./Routes/posts"));

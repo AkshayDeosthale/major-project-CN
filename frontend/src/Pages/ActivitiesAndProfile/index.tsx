@@ -1,36 +1,23 @@
-import { useState } from "react";
-import AxiosInstance from "../../Configs/AxiosInstance";
-import { useCookies } from "react-cookie";
+import { Grid } from "@mui/material";
+import Profile from "../../Components/ProfileAndQeustions/ProfileSide";
+import {
+  HomePageStructure,
+  HomepageContainer,
+} from "../Homepage/Homepage.styles";
+import QuestionsSide from "../../Components/ProfileAndQeustions/QuestionsSide";
 
 const ActivitiesAndProfile = () => {
-  const [cookies] = useCookies(["userID", "userDetail", "quoraSession"]);
-
-  const [file, setFile] = useState<File | null>(null);
-
-  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const fileList = e.target.files;
-
-    if (fileList) {
-      setFile(fileList[0]);
-    }
-  };
-  const handleSubmit = async () => {
-    const data = new FormData();
-    data.append("avatar", file!);
-    const res = await AxiosInstance.post(
-      `/users/profile/${cookies.userID}`,
-      data,
-      {
-        withCredentials: true,
-      }
-    );
-  };
   return (
-    <div>
-      ActivitiesAndProfile
-      <input type="file" name="avatar" id="avatar" onChange={onFileChange} />
-      <button onClick={handleSubmit}>submit</button>
-    </div>
+    <HomepageContainer>
+      <HomePageStructure spacing={4} container>
+        <Grid item xs={0} md={4}>
+          <Profile />
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <QuestionsSide />
+        </Grid>
+      </HomePageStructure>
+    </HomepageContainer>
   );
 };
 
