@@ -1,8 +1,7 @@
 import passport from "passport";
-const LocalStrategy = require("passport-local");
 import USER from "../Models/User.schema";
-import { UserMongooseResponse } from "../Controllers/Users.controller";
 import { LoginResponseDTO, ResponseDTO } from "../Routes/users";
+const LocalStrategy = require("passport-local");
 
 passport.use(
   new LocalStrategy({ usernameField: "email" }, function (

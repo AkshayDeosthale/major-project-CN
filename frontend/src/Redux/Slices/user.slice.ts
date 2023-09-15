@@ -35,6 +35,7 @@ export const userSlice = createSlice({
   reducers: {
     setGlobalUser: (state, action: PayloadAction<User>) => {
       Object.assign(state, action.payload);
+      localStorage.setItem("users", JSON.stringify(action.payload));
     },
   },
 });

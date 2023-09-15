@@ -10,7 +10,7 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -18,6 +18,8 @@ import AxiosInstance from "../../Configs/AxiosInstance";
 import { INTERESTS } from "../../GLOBAL_CONSTANTS";
 import { CardContainer, Heading, LoginContainer } from "../Login/Login.Styles";
 import { useForm } from "react-hook-form";
+import { GoogleLogin, googleLogout, useGoogleLogin } from "@react-oauth/google";
+import axios from "axios";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -65,8 +67,50 @@ const RegisterPage = () => {
     }
   };
 
+  const handleSocialLogin = async (e: any) => {
+    e.preventDefault();
+    try {
+      const res = await AxiosInstance.get(`/users/auth/google`);
+      console.log(res);
+    } catch (error: any) {
+      toast.error(error.response.data.message[0]);
+    }
+  };
+
   //interests
   const [value, setValue] = useState<any>([]);
+
+  const responseSuccess = async (response: any) => {
+    const { credential } = response;
+
+    try {
+      const userProfileResponse = await fetch(
+        "https://www.googleapis.com/oauth2/v1/userinfo?alt=json",
+        {
+          headers: {
+            Authorization: `Bearer ${credential}`,
+          },
+        }
+      );
+      const userData = await userProfileResponse.json();
+      console.log(userData);
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+    }
+
+    // You can also use the token for backend authentication
+    const tokenId = response.tokenId;
+  };
+
+  const responseError = () => {
+    console.log("Error occurred during login.");
+  };
+
+  // log out function to log the user out of google and set the profile array to null
+  const logOut = () => {
+    googleLogout();
+    // setProfile(null);
+  };
 
   return (
     <LoginContainer>
@@ -194,6 +238,8 @@ const RegisterPage = () => {
             </Button>
           </Box>
         </form>
+        {/* <Button onClick={handleSocialLogin}>Social Login</Button> */}
+        <GoogleLogin onSuccess={responseSuccess} onError={responseError} />
       </CardContainer>
     </LoginContainer>
   );

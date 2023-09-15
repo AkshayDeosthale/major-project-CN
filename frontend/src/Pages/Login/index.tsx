@@ -39,6 +39,7 @@ const Login = () => {
       });
 
       dispatch(setGlobalUser(res.data.userDetail));
+      localStorage.setItem("users", JSON.stringify(res.data.userDetail));
       setCookie("userID", res.data.id);
       toast.success(res.data.message[0]);
       navigate("/");

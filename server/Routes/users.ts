@@ -43,6 +43,23 @@ router.use(async (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
+router.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+router.get(
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: "/users/login",
+  }),
+  function (req: Request, res: Response) {
+    console.log("this ran");
+
+    res.redirect("/");
+  }
+);
+
 router.post("/register", async (req: Request, res: Response) => {
   const response: ResponseDTO = await RegisterUserService(req.body);
   if (response.success) {
@@ -51,17 +68,6 @@ router.post("/register", async (req: Request, res: Response) => {
     res.status(500).send(response);
   }
 });
-
-//manual login
-// router.post("/login", async (req: Request, res: Response) => {
-//   const response: LoginResponseDTO = await LoginService(req.body);
-
-//   if (response.success) {
-//     res.status(200).cookie("user", response.id).send(response);
-//   } else {
-//     res.status(500).send(response);
-//   }
-// });
 
 router.post("/login", (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate(

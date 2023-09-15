@@ -14,6 +14,9 @@ import {
 } from "./Layout.styles";
 import AccountMenu from "./UserOptions";
 import { useCookies } from "react-cookie";
+import { useEffect } from "react";
+import { useAppDispatch } from "../../Redux/hooks";
+import { setGlobalUser } from "../../Redux/Slices/user.slice";
 
 const menuitems = [
   {
@@ -35,6 +38,19 @@ const menuitems = [
 
 function Appbar() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    // Code to run on route change
+    const storageData = localStorage.getItem("users");
+    if (!storageData) {
+      navigate("/login");
+    } else {
+      const converteddata = JSON.parse(storageData);
+      dispatch(setGlobalUser(converteddata));
+    }
+  }, [location.pathname]);
 
   const [cookies] = useCookies(["userID", "quoraSession"]);
 

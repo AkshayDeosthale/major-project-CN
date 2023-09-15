@@ -7,9 +7,10 @@ import mongoose from "mongoose";
 //used for session cookie and auth
 import session from "express-session";
 const passport = require("passport");
-const LocalStrategy = require("./Config/passport-local-strategy");
 
 dotenv.config();
+const LocalStrategy = require("./Config/passport-local-strategy");
+const GooglStrategy = require("./Config/passport-google-oauth-strategy");
 
 const app: Express = express();
 
