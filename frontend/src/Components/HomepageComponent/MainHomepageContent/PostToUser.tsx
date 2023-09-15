@@ -17,10 +17,10 @@ import TextField from "@mui/material/TextField";
 import * as React from "react";
 import AxiosInstance from "../../../Configs/AxiosInstance";
 import { INTERESTS } from "../../../GLOBAL_CONSTANTS";
-import { User } from ".";
 
 import { useCookies } from "react-cookie";
 import { useForm } from "react-hook-form";
+import { User } from "../../../Redux/Slices/user.slice";
 interface Props {
   open: boolean;
   handleClose: () => void;
@@ -55,7 +55,7 @@ export default function PostToUser({
   const [autocompleteOpne, setAutocompleteOpne] = React.useState(false);
   const loading = open && options.length === 0;
 
-  const [cookies] = useCookies(["userID", "userDetail", "quoraSession"]);
+  const [cookies] = useCookies(["userID", "quoraSession"]);
 
   //Users from autocomplete
   const getAllUsers = async () => {

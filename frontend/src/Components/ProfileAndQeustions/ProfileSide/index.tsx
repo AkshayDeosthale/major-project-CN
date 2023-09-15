@@ -1,6 +1,3 @@
-import { useState } from "react";
-import { useCookies } from "react-cookie";
-import AxiosInstance from "../../../Configs/AxiosInstance";
 import {
   Card,
   CardActionArea,
@@ -8,32 +5,36 @@ import {
   CardMedia,
   Typography,
 } from "@mui/material";
-
-interface User {
-  _id: object;
-  username: string;
-  email: string;
-  password: string;
-  interests: string[];
-  followers: string[];
-  createdAt: Date;
-  updatedAt: Date;
-  avatar: string;
-  __v: number;
-}
+import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
+import AxiosInstance from "../../../Configs/AxiosInstance";
+import { setGlobalUser } from "../../../Redux/Slices/user.slice";
+import { useAppDispatch, useAppSelector } from "../../../Redux/hooks";
+import { RootState } from "../../../Redux/store";
 
 const Profile = () => {
-  const [cookies, setCookie] = useCookies([
-    "userID",
-    "userDetail",
-    "quoraSession",
-  ]);
+  const dispatch = useAppDispatch();
+  const userInformation = useAppSelector((state: RootState) => state.users);
 
-  const [userInformation, setuserInformation] = useState<User>(
-    cookies.userDetail
-  );
+  const [cookies] = useCookies(["userID"]);
 
   const [file, setFile] = useState<File | null>(null);
+
+  const getuserProfile = async () => {
+    try {
+      const res = await AxiosInstance.get(`/users/profile/${cookies.userID}`, {
+        withCredentials: true,
+      });
+      console.log(res);
+      dispatch(setGlobalUser(res.data.data));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getuserProfile();
+  }, []);
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = e.target.files;
@@ -53,13 +54,13 @@ const Profile = () => {
           withCredentials: true,
         }
       );
-      setCookie("userDetail", res.data.data);
-      setuserInformation(res.data.data);
+      getuserProfile();
     } catch (error) {
       console.log(error);
     }
   };
-  console.log(cookies.userDetail.avatar);
+
+  console.log(userInformation.avatar);
 
   return (
     <Card>
@@ -67,15 +68,15 @@ const Profile = () => {
         <CardMedia
           component="img"
           height="140"
-          image={userInformation.avatar}
-          alt={userInformation.avatar}
+          image={userInformation?.avatar}
+          alt={userInformation?.avatar}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            {userInformation.username}
+            {userInformation?.username}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {userInformation.email}
+            {userInformation?.email}
           </Typography>
           <input
             type="file"

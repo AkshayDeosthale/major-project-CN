@@ -6,18 +6,7 @@ import WritePost from "./WritePost";
 import AxiosInstance from "../../../Configs/AxiosInstance";
 import { useEffect, useState } from "react";
 import { Comments } from "./Comments";
-
-export interface User {
-  _id: string;
-  username: string;
-  email: string;
-  password: string;
-  interests: string[];
-  followers: any[];
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-}
+import { User } from "../../../Redux/Slices/user.slice";
 
 export interface Post {
   comments: Comments[];

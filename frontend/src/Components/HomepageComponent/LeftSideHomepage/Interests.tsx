@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
   Box,
@@ -8,12 +9,10 @@ import {
   ListItem,
   ListItemText,
 } from "@mui/material";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { useCookies } from "react-cookie";
+import { useAppSelector } from "../../../Redux/hooks";
 
 const Interests = () => {
-  const [cookies] = useCookies(["userID", "quoraSession", "userDetail"]);
-  const interestList: string[] = cookies?.userDetail?.interests;
+  const interestList = useAppSelector((state) => state.users.interests);
 
   return (
     <Card>

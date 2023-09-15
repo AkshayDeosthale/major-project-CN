@@ -9,11 +9,15 @@ import "@fontsource/roboto/700.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CookiesProvider } from "react-cookie";
+import { Provider } from "react-redux";
+import { store } from "./Redux/store.ts";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
     <CookiesProvider>
-      <App />
+      <Provider store={store}>
+        <App />
+      </Provider>
       <ToastContainer
         position="top-right"
         autoClose={5000}

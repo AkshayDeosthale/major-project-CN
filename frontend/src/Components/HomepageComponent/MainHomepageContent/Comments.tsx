@@ -1,20 +1,21 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as React from "react";
+import SendIcon from "@mui/icons-material/Send";
+import { Box, IconButton } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import Divider from "@mui/material/Divider";
-import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Avatar from "@mui/material/Avatar";
+import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
-import { Box, IconButton, InputAdornment } from "@mui/material";
-import { WritePostInput } from "./MainHomepageContent.styles";
-import { Post, User } from ".";
 import dayjs from "dayjs";
-import AxiosInstance from "../../../Configs/AxiosInstance";
+import * as React from "react";
 import { useCookies } from "react-cookie";
-import SendIcon from "@mui/icons-material/Send";
+import { Post } from ".";
+import AxiosInstance from "../../../Configs/AxiosInstance";
+import { User } from "../../../Redux/Slices/user.slice";
+import { WritePostInput } from "./MainHomepageContent.styles";
 
 export interface Comments {
   content: string;
@@ -35,7 +36,7 @@ export default function Comments({ comments, postId }: Props) {
   const [postComents, setpostComents] =
     React.useState<Partial<Comments[]>>(comments);
   const [userComment, setuserComment] = React.useState<string>("");
-  const [cookies] = useCookies(["userID", "userDetail", "quoraSession"]);
+  const [cookies] = useCookies(["userID", "quoraSession"]);
 
   const submitComment = async () => {
     try {

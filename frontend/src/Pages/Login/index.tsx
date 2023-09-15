@@ -9,6 +9,8 @@ import AxiosInstance from "../../Configs/AxiosInstance";
 import { CardContainer, Heading, LoginContainer } from "./Login.Styles";
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useAppDispatch } from "../../Redux/hooks";
+import { setGlobalUser } from "../../Redux/Slices/user.slice";
 
 type Inputs = {
   email: string;
@@ -16,9 +18,9 @@ type Inputs = {
 };
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [cookies, setCookie, removeCookie] = useCookies([
     "userID",
-    "userDetail",
     "quoraSession",
   ]);
 
@@ -27,7 +29,6 @@ const Login = () => {
     sessionStorage.clear();
     removeCookie("quoraSession");
     removeCookie("userID");
-    removeCookie("userDetail");
   }, [[]]);
 
   const { register, handleSubmit } = useForm();
@@ -36,8 +37,9 @@ const Login = () => {
       const res = await AxiosInstance.post(`/users/login`, data, {
         withCredentials: true,
       });
+
+      dispatch(setGlobalUser(res.data.userDetail));
       setCookie("userID", res.data.id);
-      setCookie("userDetail", res.data.userDetail);
       toast.success(res.data.message[0]);
       navigate("/");
     } catch (error: any) {

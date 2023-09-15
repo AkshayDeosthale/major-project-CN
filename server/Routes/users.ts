@@ -5,6 +5,7 @@ import {
   RegisterUserService,
   UpdateProfile,
   UserMongooseResponse,
+  getUserDetails,
 } from "../Controllers/Users.controller";
 import USER from "../Models/User.schema";
 
@@ -92,6 +93,15 @@ router.use((req, res, next) => {
     next();
   } else {
     res.status(444).send("User is not authenticated");
+  }
+});
+
+router.get("/profile/:id", async (req: Request, res: Response) => {
+  const response = await getUserDetails(req.params.id);
+  if (response.success) {
+    res.status(200).send(response);
+  } else {
+    res.status(500).send(response);
   }
 });
 

@@ -24,6 +24,11 @@ export interface UserMongooseResponse extends mongoose.Document {
   __v: number;
 }
 
+function getFullURL(relativePath: string) {
+  const baseURL = `http://localhost:3000${relativePath}`; // This can be dynamic or set through environment variables
+  return baseURL;
+}
+
 export async function RegisterUserService(
   data: CreateUserDTO
 ): Promise<ResponseDTO> {
@@ -117,6 +122,7 @@ export async function GetAllUsers() {
 export async function UpdateProfile(req: Request, res: Response, id: string) {
   try {
     let user: any = await USER.findById(id);
+
     USER.uploadAvatar(req, res, function (error: any) {
       if (error) {
         console.log(error);
@@ -127,23 +133,37 @@ export async function UpdateProfile(req: Request, res: Response, id: string) {
         };
       }
       if (req.file) {
-        if (user.avatar) {
-          const existsSync = fs.existsSync(user.avatar);
-          if (existsSync) {
-            fs.unlinkSync(user.avatar);
-          }
-        }
+        // if (user.avatar) {
+        //   const existsSync = fs.existsSync(user.avatar);
+        //   if (existsSync) {
+        //     fs.unlinkSync(user.avatar);
+        //   }
+        // }
 
-        user.avatar = path.join(
-          __dirname,
-          "..",
-          USER.avatarPath,
-          req.file.filename
-        );
+        const imgpath = path.join(USER.avatarPath, req.file.filename);
+        user.avatar = getFullURL(imgpath);
       }
 
       user.save();
     });
+    console.log(user.avatar);
+
+    return {
+      message: [`Image saved Successfully `],
+      success: true,
+      data: user,
+    };
+  } catch (error) {
+    return {
+      message: [`Error occurred , check server for logs`],
+      success: false,
+    };
+  }
+}
+
+export async function getUserDetails(id: string) {
+  try {
+    let user: any = await USER.findById(id);
     return {
       message: [`Image saved Successfully `],
       success: true,

@@ -36,9 +36,9 @@ const menuitems = [
 function Appbar() {
   const navigate = useNavigate();
 
-  const [cookies] = useCookies(["userID", "quoraSession", "userDetail"]);
+  const [cookies] = useCookies(["userID", "quoraSession"]);
 
-  if (!cookies.userID || !cookies.userDetail) {
+  if (!cookies.userID) {
     navigate("/login");
   }
 

@@ -27,7 +27,7 @@ interface Props {
 export default function Post({ post }: Props) {
   const [commentsOpen, setcommentsOpen] = useState(false);
   const [liked, setLiked] = useState(false);
-  const [cookies] = useCookies(["userID", "userDetail", "quoraSession"]);
+  const [cookies] = useCookies(["userID", "quoraSession"]);
 
   return (
     <Card sx={{ width: "100%" }}>

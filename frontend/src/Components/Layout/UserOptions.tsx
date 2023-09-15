@@ -10,15 +10,15 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Tooltip from "@mui/material/Tooltip";
 import * as React from "react";
-import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import AxiosInstance from "../../Configs/AxiosInstance";
+import { useAppSelector } from "../../Redux/hooks";
 
 export default function AccountMenu() {
+  const userDetail = useAppSelector((state) => state.users);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
-  const [cookies] = useCookies(["userID", "quoraSession", "userDetail"]);
 
   const handleLogout = async (
     e: React.MouseEvent<HTMLLIElement, MouseEvent>
@@ -96,7 +96,7 @@ export default function AccountMenu() {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         <MenuItem onClick={handleClose}>
-          <Avatar src="/1.jpg" /> {cookies?.userDetail?.username}
+          <Avatar src="/1.jpg" /> {userDetail?.username}
         </MenuItem>
 
         <Divider />

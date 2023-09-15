@@ -36,7 +36,7 @@ export default function PostToAllDialogue({
 }: Props) {
   //interest
   const [Interest, setInterest] = React.useState("Technology");
-  const [cookies] = useCookies(["userID", "userDetail", "quoraSession"]);
+  const [cookies] = useCookies(["userID", "quoraSession"]);
 
   //form and api
   const {
