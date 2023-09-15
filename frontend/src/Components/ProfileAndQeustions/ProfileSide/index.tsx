@@ -13,19 +13,19 @@ import { useAppDispatch, useAppSelector } from "../../../Redux/hooks";
 import { RootState } from "../../../Redux/store";
 
 const Profile = () => {
-  const dispatch = useAppDispatch();
   const userInformation = useAppSelector((state: RootState) => state.users);
 
   const [cookies] = useCookies(["userID"]);
 
   const [file, setFile] = useState<File | null>(null);
 
+  const dispatch = useAppDispatch();
   const getuserProfile = async () => {
     try {
       const res = await AxiosInstance.get(`/users/profile/${cookies.userID}`, {
         withCredentials: true,
       });
-      console.log(res);
+
       dispatch(setGlobalUser(res.data.data));
     } catch (error) {
       console.log(error);
@@ -55,12 +55,8 @@ const Profile = () => {
         }
       );
       getuserProfile();
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
-
-  console.log(userInformation.avatar);
 
   return (
     <Card>
