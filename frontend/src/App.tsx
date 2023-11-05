@@ -6,8 +6,14 @@ import ActivitiesAndProfile from "./Pages/ActivitiesAndProfile";
 import HomePage from "./Pages/Homepage";
 import Login from "./Pages/Login";
 import RegisterPage from "./Pages/Register";
+import { useEffect } from "react";
+import { ChatEngine } from "./Configs/ChatEngine";
 
 function App() {
+  useEffect(() => {
+    // ChatEngine("12", "akshay.deosthale6@gmail.com");
+  }, []);
+
   return (
     <div>
       <Routes>

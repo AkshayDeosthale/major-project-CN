@@ -3,9 +3,11 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express, { Express } from "express";
 import mongoose from "mongoose";
+const { Server } = require("socket.io");
 
 //used for session cookie and auth
 import session from "express-session";
+import chatSockets from "./Config/chat_sockets";
 const passport = require("passport");
 
 dotenv.config();
@@ -13,11 +15,16 @@ const LocalStrategy = require("./Config/passport-local-strategy");
 const GooglStrategy = require("./Config/passport-google-oauth-strategy");
 
 const app: Express = express();
+app.use(cors({ origin: true, credentials: true }));
+//socket
+const chatServer = require("http").Server(app);
+chatSockets(chatServer);
+chatServer.listen(5001);
+console.log("chat server is sitening on 5001");
 
 const port = 3000;
 
 //middlewares
-app.use(cors({ origin: true, credentials: true }));
 
 app.use(express.json());
 
