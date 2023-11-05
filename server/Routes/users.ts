@@ -2,12 +2,16 @@ import express, { NextFunction, Request, Response } from "express";
 import passport from "passport";
 import {
   GetAllUsers,
+  LoginService,
   RegisterUserService,
   UpdateProfile,
   UserMongooseResponse,
+  getMFACode,
   getUserDetails,
+  verifyMFA,
 } from "../Controllers/Users.controller";
 import USER from "../Models/User.schema";
+import * as nodemailer from "nodemailer";
 
 export interface ResponseDTO {
   message: string[];
@@ -69,25 +73,53 @@ router.post("/register", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/login", (req: Request, res: Response, next: NextFunction) => {
-  passport.authenticate(
-    "local",
-    (err: Error, user: LoginResponseDTO, info: any) => {
-      if (err) {
-        return res.status(500).send(err);
-      }
-      if (!user) {
-        return res.status(401).send(info);
-      }
-      req.logIn(user, (err: Error) => {
+router.post(
+  "/login",
+  async (req: Request, res: Response, next: NextFunction) => {
+    passport.authenticate(
+      "local",
+      (err: Error, user: LoginResponseDTO, info: any) => {
         if (err) {
           return res.status(500).send(err);
         }
-        return res.status(200).send(user);
-      });
+        if (!user) {
+          return res.status(401).send(info);
+        }
+        req.logIn(user, (err: Error) => {
+          if (err) {
+            return res.status(500).send(err);
+          }
+          return res.status(200).send(user);
+        });
+      }
+    )(req, res, next);
+  }
+);
+
+//multifactor auth
+router.post(
+  "/getmfauth",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const response: ResponseDTO = await getMFACode(req, res);
+    if (response.success) {
+      res.status(200).send(response);
+    } else {
+      res.status(500).send(response);
     }
-  )(req, res, next);
-});
+  }
+);
+
+router.post(
+  "/verifymfa",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const response: ResponseDTO = await verifyMFA(req, res);
+    if (response.success) {
+      res.status(200).send(response);
+    } else {
+      res.status(500).send(response);
+    }
+  }
+);
 
 router.get("/logout", (req: Request, res: Response, next: NextFunction) => {
   req.logOut((done) => done);

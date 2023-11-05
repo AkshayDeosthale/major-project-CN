@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import AxiosInstance from "../../Configs/AxiosInstance";
 import { CardContainer, Heading, LoginContainer } from "./Login.Styles";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useAppDispatch } from "../../Redux/hooks";
 import { setGlobalUser } from "../../Redux/Slices/user.slice";
@@ -15,6 +15,8 @@ import { setGlobalUser } from "../../Redux/Slices/user.slice";
 type Inputs = {
   email: string;
   password: string;
+  OTP: string;
+  id: string;
 };
 const Login = () => {
   const navigate = useNavigate();
@@ -31,18 +33,48 @@ const Login = () => {
     removeCookie("userID");
   }, [[]]);
 
+  const [isValid, setisValid] = useState(false);
+
   const { register, handleSubmit } = useForm();
+
+  const handleLogin = async (data: Inputs) => {
+    console.log(data);
+
+    const newData = { ...data, loginTime: new Date(), MFACode: data.OTP };
+    const res = await AxiosInstance.post(`/users/verifymfa`, newData, {
+      withCredentials: true,
+    });
+    console.log(res.data);
+
+    dispatch(setGlobalUser(res.data.userDetail));
+    localStorage.setItem("users", JSON.stringify(res.data.userDetail));
+    setCookie("userID", res.data.id);
+    toast.success(res.data.message[0]);
+    navigate("/");
+  };
+
+  const [id, setid] = useState("");
+
   const onSubmit: SubmitHandler<any> = async (data: Inputs) => {
     try {
-      const res = await AxiosInstance.post(`/users/login`, data, {
-        withCredentials: true,
-      });
+      if (isValid) {
+        handleLogin({ ...data, id });
+      } else {
+        const newData = { ...data, loginTime: new Date() };
+        const res = await AxiosInstance.post(`/users/login`, newData, {
+          withCredentials: true,
+        });
+        setid(res.data.id);
 
-      dispatch(setGlobalUser(res.data.userDetail));
-      localStorage.setItem("users", JSON.stringify(res.data.userDetail));
-      setCookie("userID", res.data.id);
-      toast.success(res.data.message[0]);
-      navigate("/");
+        const nres = await AxiosInstance.post(
+          `/users/getmfauth`,
+          { ...newData, id: res.data.id },
+          {
+            withCredentials: true,
+          }
+        );
+        setisValid(true);
+      }
     } catch (error: any) {
       toast.error(error.response.data.message[0]);
     }
@@ -80,6 +112,18 @@ const Login = () => {
               variant="outlined"
               {...register("password")}
             />
+            {isValid && (
+              <TextField
+                type="text"
+                required
+                fullWidth
+                size="small"
+                color="secondary"
+                label="OTP"
+                variant="outlined"
+                {...register("OTP")}
+              />
+            )}
           </Box>
           <Box
             sx={{
@@ -90,15 +134,28 @@ const Login = () => {
               mt: "15px",
             }}
           >
-            <Button
-              size="small"
-              color="success"
-              sx={{ textTransform: "none" }}
-              variant="contained"
-              type="submit"
-            >
-              Login
-            </Button>
+            {!isValid ? (
+              <Button
+                size="small"
+                color="success"
+                sx={{ textTransform: "none" }}
+                variant="contained"
+                type="submit"
+              >
+                Login
+              </Button>
+            ) : (
+              <Button
+                size="small"
+                color="success"
+                sx={{ textTransform: "none" }}
+                variant="contained"
+                type="submit"
+              >
+                submit otp
+              </Button>
+            )}
+
             <Button
               size="small"
               color="secondary"

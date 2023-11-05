@@ -31,7 +31,8 @@ const RegisterPage = () => {
   };
 
   const handleClose = () => {
-    setOpen(false);
+    // setOpen(false);
+    onSubmit();
   };
   const handleModalClose = (event: any, reason: any) => {
     console.log(event);
@@ -56,7 +57,7 @@ const RegisterPage = () => {
       username: getValues("username"),
       email: getValues("email"),
       password: getValues("password"),
-      interests: newinterests,
+      // interests: newinterests,
     };
     try {
       const res = await AxiosInstance.post(`/users/register`, data);
@@ -239,7 +240,7 @@ const RegisterPage = () => {
           </Box>
         </form>
         {/* <Button onClick={handleSocialLogin}>Social Login</Button> */}
-        <GoogleLogin onSuccess={responseSuccess} onError={responseError} />
+        {/* <GoogleLogin onSuccess={responseSuccess} onError={responseError} /> */}
       </CardContainer>
     </LoginContainer>
   );

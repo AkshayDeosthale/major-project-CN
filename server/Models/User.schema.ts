@@ -31,9 +31,11 @@ const userSchema = new mongoose.Schema(
     },
 
     password: { type: String, required: [true, "Password is required"] },
-    interests: [String],
+    interests: { type: [String], required: [false] },
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "USER" }],
     avatar: { type: String },
+    loginTime: { type: Date },
+    MFACode: { type: String },
   },
   { timestamps: true }
 );
