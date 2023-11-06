@@ -15,6 +15,8 @@ export interface CreatePostDTO {
 }
 
 export async function CreatePost(data: CreatePostDTO): Promise<ResponseDTO> {
+  console.log(data);
+
   try {
     const post_instance = new POST(data);
     await post_instance.save();

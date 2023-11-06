@@ -37,34 +37,32 @@ const Login = () => {
 
   const { register, handleSubmit } = useForm();
 
-  const handleLogin = async (data: Inputs) => {
-    console.log(data);
+  const [id, setid] = useState<any>({});
 
+  const handleLogin = async (data: Inputs) => {
     const newData = { ...data, loginTime: new Date(), MFACode: data.OTP };
     const res = await AxiosInstance.post(`/users/verifymfa`, newData, {
       withCredentials: true,
     });
-    console.log(res.data);
 
     dispatch(setGlobalUser(res.data.userDetail));
-    localStorage.setItem("users", JSON.stringify(res.data.userDetail));
-    setCookie("userID", res.data.id);
+    const stringDetail = JSON.stringify(id.userDetail);
+    localStorage.setItem("users", stringDetail);
+    setCookie("userID", data.id);
     toast.success(res.data.message[0]);
     navigate("/");
   };
 
-  const [id, setid] = useState("");
-
   const onSubmit: SubmitHandler<any> = async (data: Inputs) => {
     try {
       if (isValid) {
-        handleLogin({ ...data, id });
+        handleLogin({ ...data, id: id.id });
       } else {
         const newData = { ...data, loginTime: new Date() };
         const res = await AxiosInstance.post(`/users/login`, newData, {
           withCredentials: true,
         });
-        setid(res.data.id);
+        setid(res.data.userDetail);
 
         const nres = await AxiosInstance.post(
           `/users/getmfauth`,

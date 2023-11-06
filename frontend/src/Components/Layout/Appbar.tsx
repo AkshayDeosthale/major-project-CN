@@ -45,7 +45,7 @@ function Appbar() {
     // Code to run on route change
     const storageData = localStorage.getItem("users");
     if (!storageData) {
-      navigate("/login");
+      // navigate("/login");
     } else {
       const converteddata = JSON.parse(storageData);
       dispatch(setGlobalUser(converteddata));

@@ -18,6 +18,8 @@ import { INTERESTS } from "../../../GLOBAL_CONSTANTS";
 import AxiosInstance from "../../../Configs/AxiosInstance";
 import { useCookies } from "react-cookie";
 import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
+import { User } from "../../../Redux/Slices/user.slice";
 
 interface Props {
   open: boolean;
@@ -36,7 +38,8 @@ export default function PostToAllDialogue({
 }: Props) {
   //interest
   const [Interest, setInterest] = React.useState("Technology");
-  const [cookies] = useCookies(["userID", "quoraSession"]);
+  const [cookies, setCookie] = useCookies(["userID", "quoraSession"]);
+  const user: User = useSelector((state: any) => state.users);
 
   //form and api
   const {
@@ -52,10 +55,12 @@ export default function PostToAllDialogue({
     setInterest(event.target.value as string);
   };
 
+  console.log(cookies.userID);
+
   const handlePost = async () => {
     const data = {
       to: "general@user",
-      from: cookies.userID,
+      from: user._id,
       title: title,
       interestType: Interest,
       description: getValues("description"),
